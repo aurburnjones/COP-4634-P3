@@ -28,7 +28,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <pthread.h>
-#include <semaphore.h>          // DW MW
+#include <semaphore.h>          // DM AJ
 
 /*
  * Function prototypes
@@ -92,11 +92,11 @@ int numCrossingSago2MonkeyGrass;
 int numCrossingMonkeyGrass2Sago;
 int debug;
 int running;
-int numOfLizardsCrossing=0;                     // DW MW
-sem_t sem_liz;                                  // DW MW
-pthread_mutex_t sago2grass;                     // DW MW
-pthread_mutex_t grass2sago;                     // DW MW
-pthread_mutex_t numLizardsCrossing;             // DW MW
+int numOfLizardsCrossing=0;                     // DM AJ
+sem_t sem_liz;                                  // DM AJ
+pthread_mutex_t sago2grass;                     // DM AJ
+pthread_mutex_t grass2sago;                     // DM AJ
+pthread_mutex_t numLizardsCrossing;             // DM AJ
 
 /*
  * main()
@@ -110,8 +110,8 @@ int main(int argc, char **argv)
 	/*
 	* Local variables
 	*/
-	pthread_t tid_liz[NUM_LIZARDS], tid_cat[NUM_CATS];              // DW MW
-	intptr_t i;                                                     // DW MW
+	pthread_t tid_liz[NUM_LIZARDS], tid_cat[NUM_CATS];              // DM AJ
+	intptr_t i;                                                     // DM AJ
 
 	/*
 	* Checks for the debugging flag (-d)
@@ -136,22 +136,22 @@ int main(int argc, char **argv)
 	/*
 	* Initializes locks and/or semaphores
 	*/
-	sem_init(&sem_liz, 0, MAX_LIZARD_CROSSING);                     // DW MW
-	pthread_mutex_init(&sago2grass, NULL);                          // DW MW
-	pthread_mutex_init(&grass2sago, NULL);                          // DW MW
-	pthread_mutex_init(&numLizardsCrossing, NULL);                  // DW MW
+	sem_init(&sem_liz, 0, MAX_LIZARD_CROSSING);                     // DM AJ
+	pthread_mutex_init(&sago2grass, NULL);                          // DM AJ
+	pthread_mutex_init(&grass2sago, NULL);                          // DM AJ
+	pthread_mutex_init(&numLizardsCrossing, NULL);                  // DM AJ
 	
 	/*
 	* Creates NUM_LIZARDS lizard threads
 	*/
-	for (i=0; i<NUM_LIZARDS; i++)                                                   // DW MW
-		pthread_create(&tid_liz[i], NULL, &lizardThread, (void *)i);            // DW MW
+	for (i=0; i<NUM_LIZARDS; i++)                                                   // DM AJ
+		pthread_create(&tid_liz[i], NULL, &lizardThread, (void *)i);            // DM AJ
 
 	/*
 	* Creates NUM_CATS cat threads
 	*/
-	for (i=0; i<NUM_CATS; i++)                                                      // DW MW
-		pthread_create(&tid_cat[i], NULL, &catThread, (void *)i);               // DW MW
+	for (i=0; i<NUM_CATS; i++)                                                      // DM AJ
+		pthread_create(&tid_cat[i], NULL, &catThread, (void *)i);               // DM AJ
 
 	/*
 	* Lets the world run for a while
@@ -166,18 +166,18 @@ int main(int argc, char **argv)
 	/*
 	* Waits until all threads terminate
 	*/
-	for (i=0; i<NUM_LIZARDS; i++)                                   // DW MW
-		pthread_join(tid_liz[i], NULL);                         // DW MW
-	for (i=0; i<NUM_CATS; i++)                                      // DW MW
-		pthread_join(tid_cat[i], NULL);                         // DW MW
+	for (i=0; i<NUM_LIZARDS; i++)                                   // DM AJ
+		pthread_join(tid_liz[i], NULL);                         // DM AJ
+	for (i=0; i<NUM_CATS; i++)                                      // DM AJ
+		pthread_join(tid_cat[i], NULL);                         // DM AJ
 
 	/*
 	* Deletes the locks and semaphores
     */
-	pthread_mutex_destroy(&sago2grass);                             // DW MW
-	pthread_mutex_destroy(&grass2sago);                             // DW MW
-	pthread_mutex_destroy(&numLizardsCrossing);                     // DW MW
-	sem_destroy(&sem_liz);                                          // DW MW
+	pthread_mutex_destroy(&sago2grass);                             // DM AJ
+	pthread_mutex_destroy(&grass2sago);                             // DM AJ
+	pthread_mutex_destroy(&numLizardsCrossing);                     // DM AJ
+	sem_destroy(&sem_liz);                                          // DM AJ
 
 	/*
 	* Exits happily
@@ -209,7 +209,7 @@ void made_it_2_sago(int num);
  */
 void * lizardThread( void * param )
 {
-	int num = (intptr_t)param;              // DW MW
+	int num = (intptr_t)param;              // DM AJ
 
 	if (debug)
     {
@@ -222,35 +222,35 @@ void * lizardThread( void * param )
 		/* 
 		* Puts lizard to sleep.
 		*/
-		lizard_sleep(num);                                              // DW MW
+		lizard_sleep(num);                                              // DM AJ
 		/*
 		* Checks if it is safe to cross from sago to monkey grass.
 		*/
-		sago_2_monkeyGrass_is_safe(num);                                // DW MW
+		sago_2_monkeyGrass_is_safe(num);                                // DM AJ
 		/*
 		* Lizard crosses from sago to monkey grass.
 		*/
-		cross_sago_2_monkeyGrass(num);                                  // DW MW
+		cross_sago_2_monkeyGrass(num);                                  // DM AJ
 		/*
 		* Lets other lizards know it made it across to monkey grass.
 		*/
-		made_it_2_monkeyGrass(num);                                     // DW MW
+		made_it_2_monkeyGrass(num);                                     // DM AJ
 		/*
 		* Lizard eats monkey grass for some time.
 		*/
-		lizard_eat(num);                                                // DW MW
+		lizard_eat(num);                                                // DM AJ
 		/*
 		* Checks if it is safe to cross from monkey grass to sago.
 		*/
-		monkeyGrass_2_sago_is_safe(num);                                // DW MW
+		monkeyGrass_2_sago_is_safe(num);                                // DM AJ
 		/*
 		* Lizard crosses from monkey grass to sago.
 		*/
-		cross_monkeyGrass_2_sago(num);                                  // DW MW
+		cross_monkeyGrass_2_sago(num);                                  // DM AJ
 		/*
 		* Lets other lizards know it made it across to sago.
 		*/
-		made_it_2_sago(num);                                            // DW MW
+		made_it_2_sago(num);                                            // DM AJ
     }
 
 	pthread_exit(NULL);
@@ -266,7 +266,7 @@ void * lizardThread( void * param )
  */
 void * catThread( void * param )
 {
-	int num = (intptr_t)param;              // DW MW
+	int num = (intptr_t)param;              // DM AJ
 
 	if (debug)
     {
@@ -280,10 +280,10 @@ void * catThread( void * param )
 		/*
 		* Prints the number of lizards crossing after cat wakes up if debug argument is used
 		*/
-		if (debug)											// DW MW
+		if (debug)											// DM AJ
 		{	
-			printf( "----Number of lizards crossing = %d\n", numOfLizardsCrossing );                // DW MW
-			fflush(stdout);                                                                         // DW MW
+			printf( "----Number of lizards crossing = %d\n", numOfLizardsCrossing );                // DM AJ
+			fflush(stdout);                                                                         // DM AJ
 		}
 		/*
 		* Checks for too many lizards crossing
@@ -368,11 +368,11 @@ void sago_2_monkeyGrass_is_safe(int num)
 	/*
 	* Decrement semaphore
 	*/
-	if (sem_wait(&sem_liz) == 0)                                    // DW MW
+	if (sem_wait(&sem_liz) == 0)                                    // DM AJ
 	{
-		pthread_mutex_lock(&numLizardsCrossing);                // DW MW
-		numOfLizardsCrossing++;                                 // DW MW
-		pthread_mutex_unlock(&numLizardsCrossing);              // DW MW
+		pthread_mutex_lock(&numLizardsCrossing);                // DM AJ
+		numOfLizardsCrossing++;                                 // DM AJ
+		pthread_mutex_unlock(&numLizardsCrossing);              // DM AJ
 	}
 	
 	if (debug)
@@ -401,9 +401,9 @@ void cross_sago_2_monkeyGrass(int num)
 	/*
 	* One more crossing this way
 	*/
-	pthread_mutex_lock(&sago2grass);                // DW MW
+	pthread_mutex_lock(&sago2grass);                // DM AJ
 	numCrossingSago2MonkeyGrass++;
-	pthread_mutex_unlock(&sago2grass);              // DW MW
+	pthread_mutex_unlock(&sago2grass);              // DM AJ
 	/*
 	* Checks for lizards crossing both ways
 	*/
@@ -424,9 +424,9 @@ void cross_sago_2_monkeyGrass(int num)
 	/*
 	* That one seems to have made it
 	*/
-	pthread_mutex_lock(&sago2grass);                // DW MW
+	pthread_mutex_lock(&sago2grass);                // DM AJ
 	numCrossingSago2MonkeyGrass--;
-	pthread_mutex_unlock(&sago2grass);              // DW MW
+	pthread_mutex_unlock(&sago2grass);              // DM AJ
 }
 
 
@@ -449,11 +449,11 @@ void made_it_2_monkeyGrass(int num)
 	/*
 	* Increment semaphore to allow a blocked thread to continue execution
 	*/
-	if (sem_post(&sem_liz) == 0)                                    // DW MW
+	if (sem_post(&sem_liz) == 0)                                    // DM AJ
 	{
-		pthread_mutex_lock(&numLizardsCrossing);                // DW MW
-		numOfLizardsCrossing--;                                 // DW MW
-		pthread_mutex_unlock(&numLizardsCrossing);              // DW MW
+		pthread_mutex_lock(&numLizardsCrossing);                // DM AJ
+		numOfLizardsCrossing--;                                 // DM AJ
+		pthread_mutex_unlock(&numLizardsCrossing);              // DM AJ
 	}
 }
 
@@ -506,11 +506,11 @@ void monkeyGrass_2_sago_is_safe(int num)
 	/*
 	* Decrement semaphore
 	*/
-	if (sem_wait(&sem_liz) == 0)                                    // DW MW
+	if (sem_wait(&sem_liz) == 0)                                    // DM AJ
 	{
-		pthread_mutex_lock(&numLizardsCrossing);                // DW MW
-		numOfLizardsCrossing++;                                 // DW MW
-		pthread_mutex_unlock(&numLizardsCrossing);              // DW MW
+		pthread_mutex_lock(&numLizardsCrossing);                // DM AJ
+		numOfLizardsCrossing++;                                 // DM AJ
+		pthread_mutex_unlock(&numLizardsCrossing);              // DM AJ
 	}
 
 	if (debug)
@@ -540,9 +540,9 @@ void cross_monkeyGrass_2_sago(int num)
 	/*
 	* One more crossing this way
 	*/
-	pthread_mutex_lock(&grass2sago);                // DW MW
+	pthread_mutex_lock(&grass2sago);                // DM AJ
 	numCrossingMonkeyGrass2Sago++;
-	pthread_mutex_unlock(&grass2sago);              // DW MW
+	pthread_mutex_unlock(&grass2sago);              // DM AJ
   
 	/*
 	* Checks for lizards crossing both ways
@@ -563,9 +563,9 @@ void cross_monkeyGrass_2_sago(int num)
 	/*
 	* That one seems to have made it
 	*/
-	pthread_mutex_lock(&grass2sago);                // DW MW
+	pthread_mutex_lock(&grass2sago);                // DM AJ
 	numCrossingMonkeyGrass2Sago--;
-	pthread_mutex_unlock(&grass2sago);              // DW MW
+	pthread_mutex_unlock(&grass2sago);              // DM AJ
 }
 
 
@@ -588,11 +588,11 @@ void made_it_2_sago(int num)
 	/*
 	* Increment semaphore to allow a blocked thread to continue execution
 	*/
-	if (sem_post(&sem_liz) == 0)                                    // DW MW
+	if (sem_post(&sem_liz) == 0)                                    // DM AJ
 	{
-		pthread_mutex_lock(&numLizardsCrossing);                // DW MW
-		numOfLizardsCrossing--;                                 // DW MW
-		pthread_mutex_unlock(&numLizardsCrossing);              // DW MW
+		pthread_mutex_lock(&numLizardsCrossing);                // DM AJ
+		numOfLizardsCrossing--;                                 // DM AJ
+		pthread_mutex_unlock(&numLizardsCrossing);              // DM AJ
 	}
 }
 
